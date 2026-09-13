@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScotMesh Backbone — public Reticulum transport node for Scotland</title>
+<meta name="description" content="ScotMesh Backbone: a public Reticulum transport node in Scotland. TCP rns.scotmesh.net:4242, I2P, chat hub, LXMF propagation node, Nomad Network node and the ScotMesh LoRa settings.">
+<style>
+:root{
+  --bg:#111827; --card:#1f2937; --well:#0f172a; --line:#374151;
+  --ink:#f3f4f6; --muted:#9ca3af; --blue:#2563eb; --blue-deep:#1d4ed8; --link:#60a5fa;
+  --up:#22c55e; --down:#ef4444; --warn:#f59e0b; --unknown:#6b7280;
+}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.6;padding-inline:16px;padding-block:0 3rem}
+.wrap{max-width:1100px;margin:0 auto;padding-top:2rem}
+a{color:var(--link)}
+h1,h2,h3{margin:0;line-height:1.2}
+h1{font-size:2.6rem}
+h2{font-size:1.5rem}
+h3{font-size:1.1rem;margin-bottom:.4rem}
+p{margin:.6rem 0;max-width:72ch}
+.small{color:var(--muted);font-size:.95rem}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--well);padding:.12rem .4rem;border-radius:5px;white-space:nowrap}
+pre{background:var(--well);border-radius:8px;padding:1rem;margin:.8rem 0 0;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;line-height:1.45}
+pre code{background:none;padding:0;white-space:pre}
+.card{background:var(--card);border-radius:12px;padding:1.5rem;margin-top:1.5rem}
+.card > h2{margin-bottom:.3rem}
+
+.header{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.header svg{height:56px;width:auto;border-radius:4px;flex:none}
+.subtitle{color:var(--muted);margin:.4rem 0 0;font-size:1.1rem}
+
+.status{display:inline-flex;align-items:center;gap:.55rem;background:var(--well);border:1px solid var(--line);border-radius:999px;padding:.35rem .9rem .35rem .6rem;font-weight:600;margin-top:1rem;max-width:100%}
+.status .when{color:var(--muted);font-weight:400;font-size:.9rem}
+.dot{width:.7rem;height:.7rem;border-radius:50%;background:var(--unknown);flex:none}
+.dot.up{background:var(--up);box-shadow:0 0 0 3px rgba(34,197,94,.25)}
+.dot.down{background:var(--down);box-shadow:0 0 0 3px rgba(239,68,68,.25)}
+.dot.stale{background:var(--warn);box-shadow:0 0 0 3px rgba(245,158,11,.25)}
+.dot.sm{width:.55rem;height:.55rem;box-shadow:none;display:inline-block;vertical-align:middle;margin-right:.4rem}
+.st{white-space:nowrap}
+.st.up{color:var(--up)} .st.down{color:var(--down)} .st.stale{color:var(--warn)} .st.unknown{color:var(--muted)}
+
+.banner{background:var(--blue-deep);border-radius:12px;padding:1rem 1.25rem;margin-top:1.25rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.6rem 2rem}
+.banner .k{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
+.banner .v{font-weight:700;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all;font-size:1.05rem}
+
+.ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-top:1rem}
+.way{background:var(--well);border-radius:10px;padding:1rem 1.1rem;display:flex;flex-direction:column}
+.way h3 .tag{font-size:.75rem;font-weight:600;color:var(--muted);margin-left:.4rem}
+.way ol{padding-left:1.2rem;margin:.4rem 0 0}
+.way ol li{margin:.3rem 0}
+.way pre{background:#0a0f1a}
+.way .more{margin-top:auto;padding-top:.8rem;font-size:.92rem}
+.btn{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;font-weight:700;padding:.65rem 1rem;border-radius:8px;transition:background .2s}
+.btn:hover{background:var(--blue-deep)}
+
+.tablewrap{overflow-x:auto;margin-top:1rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;padding:.5rem .75rem .5rem 0;border-bottom:1px solid var(--line)}
+td{padding:.6rem .75rem .6rem 0;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.mono{font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
+td.num{font-variant-numeric:tabular-nums}
+
+.radio{display:grid;grid-template-columns:1.3fr 1fr;gap:1.5rem;align-items:start}
+@media (max-width:760px){.radio{grid-template-columns:1fr}}
+.notice{background:var(--well);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;padding:.8rem 1rem;margin-top:.8rem}
+.wanted{background:var(--well);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:1rem;margin-top:1.25rem}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:1rem}
+.tool-link{display:block;background:var(--blue);color:#fff;text-decoration:none;padding:1rem;border-radius:8px;font-weight:700;text-align:center;transition:background .2s}
+.tool-link:hover{background:var(--blue-deep)}
+footer{margin-top:3rem;color:var(--muted);text-align:center;font-size:.95rem}
+a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="header">
+  <svg viewBox="0 0 60 36" aria-label="Flag of Scotland" role="img"><rect width="60" height="36" fill="#0065bd"/><path d="M0 0L60 36M60 0L0 36" stroke="#fff" stroke-width="6"/></svg>
+  <div>
+    <h1>ScotMesh Backbone</h1>
+    <p class="subtitle">The public Reticulum transport node for Scotland — open to anyone, no registration, no account.</p>
+  </div>
+</div>
+
+<div class="status" id="status" aria-live="polite">
+  <span class="dot" id="status-dot"></span>
+  <span id="status-text">Checking…</span>
+  <span class="when" id="status-when"></span>
+</div>
+
+<div class="banner">
+  <div><div class="k">📡 TCP</div><div class="v">rns.scotmesh.net : 4242</div></div>
+  <div><div class="k">🧅 I2P</div><div class="v">a3pswrtvpuro62ijhb7lwdt2n6aqgajglof27ynbonynmolzlz7q.b32.i2p</div></div>
+</div>
+
+<div class="card" id="connect">
+  <h2>Connect</h2>
+  <p class="small">Three ways in. Pick one; they all land on the same network. If you have never used Reticulum, the <a href="https://wiki.scotmesh.net/wiki/Connecting_to_ScotMesh">wiki walkthrough</a> takes you from nothing to connected.</p>
+
+  <div class="ways">
+    <div class="way">
+      <h3>MeshChatX <span class="tag">easiest</span></h3>
+      <p class="small" style="margin:0">All-in-one client — messaging, files, voice, pages — and it manages its own Reticulum config. Windows, macOS, Linux, Android.</p>
+      <ol>
+        <li><a href="https://github.com/Quad4-Software/MeshChatX/releases">Download</a> and open it</li>
+        <li><strong>Interfaces → Add Interface → TCPClientInterface</strong></li>
+        <li>Host <code>rns.scotmesh.net</code>, port <code>4242</code>, save, restart</li>
+      </ol>
+      <p class="more">The interface comes up within seconds; announces start arriving straight away.</p>
+    </div>
+
+    <div class="way">
+      <h3>Config file <span class="tag">already running Reticulum</span></h3>
+      <p class="small" style="margin:0">Add to the <code>[interfaces]</code> section of <code>~/.reticulum/config</code>, then restart and run <code>rnstatus</code>.</p>
+<pre><code>  [[ScotMesh Backbone]]
+    type = TCPClientInterface
+    enabled = yes
+    target_host = rns.scotmesh.net
+    target_port = 4242</code></pre>
+      <p class="more">No account, no key exchange, nothing to approve — every link is end-to-end encrypted by default.</p>
+    </div>
+
+    <div class="way">
+      <h3>I2P <span class="tag">behind CGNAT or a locked-down firewall</span></h3>
+      <p class="small" style="margin:0">No port forwarding at either end. Needs a local I2P router with SAMv3 on — <code>apt install i2pd</code> is enough.</p>
+<pre><code>  [[ScotMesh I2P]]
+    type = I2PInterface
+    enabled = yes
+    peers = a3pswrtvpuro62ijhb7lwdt2n6aqgajglof27ynbonynmolzlz7q.b32.i2p</code></pre>
+      <p class="more"><strong>Give it a few minutes on first start.</strong> I2P builds tunnels before the interface comes up, so it sits as Down for a while — normal, not a fault. Slower than TCP; use it when TCP is not an option. <a href="https://wiki.scotmesh.net/wiki/Access_over_I2P">More on the wiki.</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="addresses">
+  <h2>Addresses</h2>
+  <p class="small">Everything this node runs, in one place. Once connected, these are the values to paste into your client. Most clients also find them by announce.</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Service</th><th>Address</th><th>Use it with</th><th>Now</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Transport node</strong> (TCP)</td><td class="mono">rns.scotmesh.net:4242</td><td>Any Reticulum client</td><td><span class="st unknown" data-service="rnsd">…</span></td></tr>
+      <tr><td><strong>Transport node</strong> (I2P)</td><td class="mono">a3pswrtvpuro62ijhb7lwdt2n6aqgajglof27ynbonynmolzlz7q.b32.i2p</td><td>Any client, via a local i2pd</td><td><span class="st unknown" data-i2p>…</span></td></tr>
+      <tr><td><strong>Chat hub</strong> (RRC)<br><span class="small">Room <code>scotmesh</code> · latest 25 messages on join, kept 7 days · @mentions reach you offline</span></td><td class="mono">004e5a15da221d9a236b0e8d74195f13</td><td>MeshChatX, Ratspeak, rrc-tui, rrc-gui, WeeChat, Eridanus — then <code>/join scotmesh</code></td><td><span class="st unknown" data-service="rrc-hub">…</span></td></tr>
+      <tr><td><strong>Propagation node</strong> (LXMF)<br><span class="small">Holds messages for people who are offline · 2 GB store</span></td><td class="mono">c283b754e0acc11ce48d2f5e29167e0c</td><td>Sideband, MeshChatX, Nomad Network — usually picked up automatically</td><td><span class="st unknown" data-service="lxmd">…</span></td></tr>
+      <tr><td><strong>Nomad Network node</strong><br><span class="small">Pages served inside Reticulum</span></td><td class="mono">10a839df2c50635bcb0c8a299b9ca0f8:/page/index.mu</td><td><code>nomadnet</code>, MeshChatX</td><td><span class="st unknown" data-service="nomadnet">…</span></td></tr>
+      <tr><td><strong>Transport instance</strong></td><td class="mono">20b962cd814444f7812e409e7c47f319</td><td>What you see in <code>rnpath</code> and on node maps. Announced as "ScotMesh Backbone"</td><td><span class="st unknown" data-uptime>…</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small" style="margin-top:.8rem">Hosted in Dalgety Bay, Fife. The IP is dynamic and updated automatically — always connect by hostname. Held messages are encrypted end to end; this node cannot read them.</p>
+</div>
+
+<div class="card" id="radio">
+  <h2>Radio</h2>
+  <div class="radio">
+    <div>
+      <p class="small">These are the LoRa settings the network uses. Every radio must match all five exactly — a board with a different spreading factor is not weakly connected, it is completely deaf, and nothing reports an error.</p>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th></th><th>ScotMesh 433</th><th>ScotMesh 868</th></tr></thead>
+        <tbody>
+          <tr><td>Frequency</td><td class="num">433.775 MHz</td><td class="num">869.4625 MHz</td></tr>
+          <tr><td>Bandwidth</td><td class="num">125 kHz</td><td class="num">125 kHz</td></tr>
+          <tr><td>Spreading factor</td><td class="num">SF8</td><td class="num">SF9</td></tr>
+          <tr><td>Coding rate</td><td class="num">4/5</td><td class="num">4/5</td></tr>
+          <tr><td>TX power</td><td class="num">7 dBm</td><td class="num">22 dBm</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div>
+      <div class="notice"><strong>No ScotMesh radio is on air yet.</strong> The backbone is internet and I2P only today. These settings are published now so a radio built now will hear the others when they arrive.</div>
+      <p style="margin-top:1rem"><a class="btn" href="https://rnode.scotmesh.net">Flash a radio or build a node in your browser</a></p>
+      <p class="small">Chrome or Edge on a desktop, USB cable. The ScotMesh Flasher walks you through it: an <strong>RNode radio</strong> for a computer or phone (the app you connect it to sets the radio profile), or a <strong>standalone microReticulum node</strong> — a self-contained transport node for a solar box or hilltop, provisioned with the ScotMesh profile, a name and your management identity. Boards, Bluetooth pairing and the config-file form of these settings are on the <a href="https://wiki.scotmesh.net/wiki/RNode">RNode page</a>.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="peers">
+  <h2>Who we peer with</h2>
+  <p class="small">A transport node is only as useful as what it connects to. These are the upstream nodes ScotMesh links out to, so you can see whose infrastructure your traffic transits. The link column is what our node sees right now.</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Peer</th><th>Transport</th><th>Location</th><th>Link</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">rebelnet.uk</td><td>TCP 4242</td><td>London, England</td><td><span class="st unknown" data-peer="rebelnet.uk">…</span></td></tr>
+      <tr><td class="mono">rns.cybercore.uk</td><td>TCP 4242</td><td>Bilston, England</td><td><span class="st unknown" data-peer="rns.cybercore.uk">…</span></td></tr>
+      <tr><td class="mono">rmap.world</td><td>TCP 4242</td><td>France</td><td><span class="st unknown" data-peer="rmap.world">…</span></td></tr>
+      <tr><td class="mono">loj5ofd3a5b5suefcrasn5cnidgofeftnpnko6ym5wkamllrucga.b32.i2p</td><td>I2P</td><td>Northern Ireland</td><td><span class="st unknown" data-peer="loj5ofd3a5b5suefcrasn5cnidgofeftnpnko6ym5wkamllrucga.b32.i2p">…</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small">Locations are from IP geolocation of the published hostname — indicative only. Where an operator has told us otherwise, we say so.</p>
+  <div class="wanted">
+    <strong>Want to peer with us?</strong> Point a <code>TCPClientInterface</code> at <code>rns.scotmesh.net:4242</code>, or use the I2P address, then tell us on <a href="https://discord.gg/ytxfyuDmSt">Discord</a> or in the <code>scotmesh</code> room so we can peer back. Transport nodes relay only encrypted traffic and cannot read what passes through them — peering costs you a config line and nothing else. UK and Irish links especially welcome.
+  </div>
+</div>
+
+<div class="card" id="next">
+  <h2>Where next</h2>
+  <div class="grid">
+    <a class="tool-link" href="https://wiki.scotmesh.net">📚 Reticulum wiki</a>
+    <a class="tool-link" href="https://rnode.scotmesh.net">🔧 ScotMesh Flasher</a>
+    <a class="tool-link" href="https://discord.gg/ytxfyuDmSt">💬 Discord</a>
+    <a class="tool-link" href="https://reticulum.network/manual/">📖 Reticulum manual</a>
+  </div>
+  <p class="small" style="margin-top:1.2rem">Something not working? <a href="https://wiki.scotmesh.net/wiki/Known_bugs_and_workarounds">Known bugs and workarounds</a> covers the ones that have bitten us, including the 12-hour lockout after a node restart.</p>
+  <p class="small"><strong>Looking for the MeshCore side of ScotMesh?</strong> That is a separate network with a different design — the map, CoreScope, coverage and alerting tools are at <a href="https://scotmesh.net">scotmesh.net</a>.</p>
+</div>
+
+<footer>
+  ScotMesh · <a href="https://scotmesh.net">scotmesh.net</a> · <a href="https://wiki.scotmesh.net">wiki</a> · <a href="https://rnode.scotmesh.net">flasher</a> · <a href="/status.json">status.json</a>
+</footer>
+
+</div>
+
+<script>
+// status.json is rewritten every 2 minutes on this box from `rnstatus -j` and systemd.
+// Anything older than STALE_MS is shown as unknown, never as a stale green.
+(() => {
+  const STALE_MS = 10 * 60 * 1000;
+  const REFRESH_MS = 60 * 1000;
+  const dot = document.getElementById('status-dot');
+  const text = document.getElementById('status-text');
+  const when = document.getElementById('status-when');
+
+  const mark = (el, state, label) => { el.className = 'st ' + state; el.innerHTML = '<span class="dot sm ' + (state === 'unknown' ? '' : state) + '"></span>' + label; };
+  const ago = (ms) => { const m = Math.round(ms / 60000); return m < 1 ? 'just now' : m === 1 ? '1 min ago' : m < 120 ? m + ' min ago' : Math.round(m / 60) + ' h ago'; };
+  const hhmm = (d) => d.toISOString().slice(11, 16) + ' UTC';
+  const days = (s) => { const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600); return d ? d + 'd ' + h + 'h' : h + 'h ' + Math.floor((s % 3600) / 60) + 'm'; };
+
+  const setAll = (state, label) => {
+    document.querySelectorAll('[data-peer],[data-service],[data-i2p],[data-uptime]').forEach(el => mark(el, state, label));
+  };
+
+  const render = (s) => {
+    const checked = new Date(s.checked);
+    const age = Date.now() - checked.getTime();
+    const stale = isNaN(age) || age > STALE_MS;
+
+    if (stale) {
+      dot.className = 'dot stale';
+      text.textContent = 'Status unknown';
+      when.textContent = isNaN(age) ? '· no valid check time' : '· last check ' + ago(age) + ', monitor may be down';
+      setAll('unknown', 'unknown');
+      return;
+    }
+    dot.className = 'dot ' + (s.online ? 'up' : 'down');
+    text.textContent = s.online
+      ? 'Online' + (s.clients != null ? ' — ' + s.clients + ' client' + (s.clients === 1 ? '' : 's') + ' connected' : '')
+      : 'Offline — not accepting connections' + (s.error ? ' (' + s.error + ')' : '');
+    when.textContent = '· checked ' + hhmm(checked) + ', ' + ago(age);
+
+    document.querySelectorAll('[data-peer]').forEach(el => {
+      const v = s.peers ? s.peers[el.dataset.peer] : undefined;
+      mark(el, v === true ? 'up' : v === false ? 'down' : 'unknown', v === true ? 'up' : v === false ? 'down' : 'unknown');
+    });
+    document.querySelectorAll('[data-service]').forEach(el => {
+      const v = s.services ? s.services[el.dataset.service] : undefined;
+      mark(el, v === true ? 'up' : v === false ? 'down' : 'unknown', v === true ? 'running' : v === false ? 'stopped' : 'unknown');
+    });
+    document.querySelectorAll('[data-i2p]').forEach(el => mark(el, s.i2p === true ? 'up' : s.i2p === false ? 'down' : 'unknown', s.i2p === true ? 'tunnel up' : s.i2p === false ? 'tunnel down' : 'unknown'));
+    document.querySelectorAll('[data-uptime]').forEach(el => mark(el, s.online ? 'up' : 'unknown', s.transport_uptime_s ? 'up ' + days(s.transport_uptime_s) : 'unknown'));
+  };
+
+  const load = async () => {
+    try {
+      const r = await fetch('/status.json?t=' + Date.now(), { cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status);
+      render(await r.json());
+    } catch (e) {
+      dot.className = 'dot stale';
+      text.textContent = 'Status unavailable';
+      when.textContent = '· could not read status.json';
+      setAll('unknown', 'unknown');
+    }
+  };
+  load();
+  setInterval(load, REFRESH_MS);
+})();
+</script>
+</body>
+</html>
