@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScotMesh backbone status</title>
+<style>
+/* Embeddable status strip. Transparent background so it sits on whatever page hosts it. */
+:root{color-scheme:light dark;--ink:#222;--muted:#666;--pill:#f3f5f8;--line:#d9dee4;--up:#16a34a;--down:#dc2626;--warn:#d97706;--unknown:#6b7280}
+@media (prefers-color-scheme:dark){:root{--ink:#e8e8e8;--muted:#a3a7ad;--pill:#1f2937;--line:#374151;--up:#22c55e;--down:#ef4444;--warn:#f59e0b}}
+html,body{margin:0;background:transparent;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;color:var(--ink)}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .9rem;padding:2px 0}
+.pill{display:inline-flex;align-items:center;gap:.5rem;background:var(--pill);border:1px solid var(--line);border-radius:999px;padding:.3rem .9rem .3rem .55rem;font-weight:600}
+.dot{width:.65rem;height:.65rem;border-radius:50%;background:var(--unknown);flex:none}
+.dot.up{background:var(--up);box-shadow:0 0 0 3px rgba(34,197,94,.25)}
+.dot.down{background:var(--down);box-shadow:0 0 0 3px rgba(239,68,68,.25)}
+.dot.stale{background:var(--warn);box-shadow:0 0 0 3px rgba(245,158,11,.25)}
+.when,.svc{color:var(--muted);font-size:.88rem}
+.svc b{font-weight:600;color:var(--ink)}
+.svc .up{color:var(--up)} .svc .down{color:var(--down)}
+a{color:inherit}
+</style>
+</head>
+<body>
+<div class="row">
+  <span class="pill"><span class="dot" id="dot"></span><span id="text">Checking…</span></span>
+  <span class="when" id="when"></span>
+  <span class="svc" id="svc"></span>
+</div>
+<script>
+// Same feed and same rules as the rns.scotmesh.net homepage: status.json is rewritten every
+// 2 minutes from rnstatus; anything older than 10 minutes is shown as unknown, never stale green.
+(() => {
+  const STALE_MS = 10 * 60 * 1000, REFRESH_MS = 60 * 1000;
+  const dot = document.getElementById('dot'), text = document.getElementById('text'), when = document.getElementById('when'), svc = document.getElementById('svc');
+  const ago = (ms) => { const m = Math.round(ms / 60000); return m < 1 ? 'just now' : m === 1 ? '1 min ago' : m < 120 ? m + ' min ago' : Math.round(m / 60) + ' h ago'; };
+  const load = async () => {
+    try {
+      const r = await fetch('/status.json?t=' + Date.now(), { cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status);
+      const s = await r.json();
+      const age = Date.now() - new Date(s.checked).getTime();
+      if (isNaN(age) || age > STALE_MS) { dot.className = 'dot stale'; text.textContent = 'Status unknown'; when.textContent = 'last check ' + ago(age) + ' — monitor may be down'; svc.textContent = ''; return; }
+      dot.className = 'dot ' + (s.online ? 'up' : 'down');
+      text.textContent = s.online ? 'Backbone online' + (s.clients != null ? ' — ' + s.clients + ' clients connected' : '') : 'Backbone offline';
+      when.textContent = 'checked ' + ago(age) + ' · rns.scotmesh.net:4242';
+      const names = { 'rrc-hub': 'chat hub', lxmd: 'propagation', nomadnet: 'Nomad Network', i2pd: 'I2P' };
+      const parts = Object.entries(names).filter(([k]) => s.services && k in s.services).map(([k, n]) => '<span class="' + (s.services[k] ? 'up' : 'down') + '">' + n + ' ' + (s.services[k] ? '✔' : '✘') + '</span>');
+      const peers = s.peers ? Object.values(s.peers) : [];
+      if (peers.length) parts.push('<b>' + peers.filter(Boolean).length + '/' + peers.length + '</b> peers up');
+      svc.innerHTML = parts.join(' · ');
+    } catch (e) {
+      dot.className = 'dot stale'; text.textContent = 'Status unavailable'; when.textContent = 'could not read status.json'; svc.textContent = '';
+    }
+  };
+  load(); setInterval(load, REFRESH_MS);
+})();
+</script>
+</body>
+</html>
