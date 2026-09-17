@@ -182,22 +182,22 @@ a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
   <h2>Radio</h2>
   <div class="radio">
     <div>
-      <p class="small">These are the LoRa settings the network uses. Every radio must match all five exactly — a board with a different spreading factor is not weakly connected, it is completely deaf, and nothing reports an error.</p>
+      <p class="small">These are the LoRa settings the network uses — one profile, 868 MHz. Every radio must match all five exactly: a board with a different spreading factor is not weakly connected, it is completely deaf, and nothing reports an error.</p>
       <div class="tablewrap">
       <table>
-        <thead><tr><th></th><th>ScotMesh 433</th><th>ScotMesh 868</th></tr></thead>
+        <thead><tr><th></th><th>ScotMesh 868</th></tr></thead>
         <tbody>
-          <tr><td>Frequency</td><td class="num">433.775 MHz</td><td class="num">869.4625 MHz</td></tr>
-          <tr><td>Bandwidth</td><td class="num">125 kHz</td><td class="num">125 kHz</td></tr>
-          <tr><td>Spreading factor</td><td class="num">SF8</td><td class="num">SF9</td></tr>
-          <tr><td>Coding rate</td><td class="num">4/5</td><td class="num">4/5</td></tr>
-          <tr><td>TX power</td><td class="num">7 dBm</td><td class="num">22 dBm</td></tr>
+          <tr><td>Frequency</td><td class="num">869.4625 MHz</td></tr>
+          <tr><td>Bandwidth</td><td class="num">125 kHz</td></tr>
+          <tr><td>Spreading factor</td><td class="num">SF9</td></tr>
+          <tr><td>Coding rate</td><td class="num">4/5</td></tr>
+          <tr><td>TX power</td><td class="num">22 dBm</td></tr>
         </tbody>
       </table>
       </div>
     </div>
     <div>
-      <div class="notice"><strong>No ScotMesh radio is on air yet.</strong> The backbone is internet and I2P only today. These settings are published now so a radio built now will hear the others when they arrive.</div>
+      <div class="notice"><strong>ScotMesh radios are on air.</strong> The first gateway runs at Cadham Village in Fife, carrying 869.4625 MHz LoRa into the backbone, and more nodes are being commissioned. Coverage is local to that mast today — build to these settings and your radio joins the network the moment it is in range of one.</div>
       <p style="margin-top:1rem"><a class="btn" href="https://rnode.scotmesh.net">Flash a radio or build a node in your browser</a></p>
       <p class="small">Chrome or Edge on a desktop, USB cable. The ScotMesh Flasher walks you through it: an <strong>RNode radio</strong> for a computer or phone (the app you connect it to sets the radio profile), or a <strong>standalone microReticulum node</strong> — a self-contained transport node for a solar box or hilltop, provisioned with the ScotMesh profile, a name and your management identity. Boards, Bluetooth pairing and the config-file form of these settings are on the <a href="https://wiki.scotmesh.net/wiki/RNode">RNode page</a>.</p>
     </div>
