@@ -6,6 +6,7 @@ rather than pulling them from Google — which is how the current site already
 works, and one less third party between a reader and a page about privacy.
 """
 import pathlib, re
+import seo
 
 page = (pathlib.Path(__file__).resolve().parent / 'page.html').read_text()
 
@@ -23,27 +24,13 @@ page = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^"]*
 assert 'fonts.googleapis.com' not in page, 'a Google Fonts reference survived'
 assert '@font-face' in page
 
-# the artifact's <title> is a gallery name; the site wants the descriptive one
-page = page.replace('<title>ScotMesh Backbone</title>',
-                    '<title>ScotMesh Backbone — public Reticulum transport node for Scotland</title>', 1)
+# the artifact's <title> is a gallery name; seo.head() supplies the site's own
+page = re.sub(r'<title>.*?</title>\s*', '', page, count=1)
 
-HEAD_EXTRA = '''<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="canonical" href="https://rns.scotmesh.net/">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="description" content="ScotMesh Backbone: a public Reticulum transport node in Scotland. TCP rns.scotmesh.net:4242, I2P, chat hub, LXMF propagation node, Nomad Network node and the ScotMesh LoRa settings.">
-<meta name="theme-color" content="#0A1424">
-<meta name="color-scheme" content="dark light">
-<meta property="og:title" content="ScotMesh Backbone">
-<meta property="og:description" content="The public Reticulum transport node for Scotland. TCP rns.scotmesh.net:4242 or I2P, no registration, no account.">
-<meta property="og:image" content="https://rns.scotmesh.net/og.png">
-<meta property="og:url" content="https://rns.scotmesh.net/">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="preload" href="/fonts/ibm-plex-mono-600.woff2" as="font" type="font/woff2" crossorigin>
+PRELOADS = '''<link rel="preload" href="/fonts/ibm-plex-mono-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/ibm-plex-sans-condensed-400.woff2" as="font" type="font/woff2" crossorigin>
 '''
+HEAD_EXTRA = seo.head('rns', extra=PRELOADS)
 
 # the artifact skeleton pads :root by the safe-area insets; supply that here
 RESET = '''<style>
@@ -61,6 +48,9 @@ doc = ('<!DOCTYPE html>\n<html lang="en-GB">\n<head>\n' + HEAD_EXTRA + head + '\
 
 # The repo is flat: the served files sit at the root, beside the fonts and
 # icons that are not generated. app.js is hand-written and lives there too.
-out = pathlib.Path(__file__).resolve().parent.parent / 'index.html'
+root = pathlib.Path(__file__).resolve().parent.parent
+out = root / 'index.html'
 out.write_text(doc)
+(root / 'robots.txt').write_text(seo.robots('rns', disallow=['/status.json']))
+(root / 'sitemap.xml').write_text(seo.sitemap('rns'))
 print('wrote %s (%.0f KB)' % (out.name, len(doc) / 1024))

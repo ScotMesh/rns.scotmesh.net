@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /status.json
+
+Sitemap: https://rns.scotmesh.net/sitemap.xml
