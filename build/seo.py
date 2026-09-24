@@ -17,7 +17,7 @@ SITES = {
      og_desc='MeshCore, Meshtastic and Reticulum across Scotland: what each one is, where the nodes are, and how to join.',
      image='https://scotmesh.net/og.png', image_alt='ScotMesh: three meshes across Scotland, one community', theme='#0A1424',
      keywords='mesh network Scotland, MeshCore Scotland, Meshtastic Scotland, Reticulum Scotland, LoRa mesh Scotland, ScotMesh',
-     about=['MeshCore', 'Meshtastic', 'Reticulum'], icons='<link rel="icon" href="/favicon.svg" type="image/svg+xml">'),
+     about=['MeshCore', 'Meshtastic', 'Reticulum'], icons='<link rel="icon" href="/favicon.svg" type="image/svg+xml">\n<link rel="icon" href="/favicon.ico" sizes="32x32">\n<link rel="icon" href="/icons/favicon-48.png" sizes="48x48" type="image/png">\n<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">\n<link rel="icon" href="/icons/favicon-16.png" sizes="16x16" type="image/png">\n<link rel="apple-touch-icon" href="/apple-touch-icon.png">\n<link rel="manifest" href="/site.webmanifest">'),
  'meshcore': dict(url='https://meshcore.scotmesh.net/', name='MeshCore in Scotland', title='MeshCore in Scotland — ScotMesh',
      desc="Scotland's MeshCore radio mesh: live map and packets, the settings that actually work here, and step-by-step guides for running a repeater or an observer.",
      og_title='MeshCore in Scotland', og_desc="Join Scotland's MeshCore mesh: the settings that work here, and how to run a repeater or an observer.",
@@ -30,13 +30,13 @@ SITES = {
      image='https://meshtastic.scotmesh.net/og-image.png', image_alt='ScotMesh Meshtastic: The Original Scottish Mesh', theme='#0A1424',
      keywords='Meshtastic Scotland, Meshtastic EU_868, Meshtastic LongFast Scotland, Meshtastic nodes Scotland, LoRa mesh Scotland, ScotMesh',
      about=['Meshtastic'],
-     icons='<link rel="icon" href="/favicon.svg" type="image/svg+xml">\n<link rel="icon" href="/favicon.ico" sizes="32x32">\n<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">\n<link rel="icon" href="/icons/favicon-16.png" sizes="16x16" type="image/png">\n<link rel="apple-touch-icon" href="/apple-touch-icon.png">\n<link rel="manifest" href="/site.webmanifest">'),
+     icons='<link rel="icon" href="/favicon.svg" type="image/svg+xml">\n<link rel="icon" href="/favicon.ico" sizes="32x32">\n<link rel="icon" href="/icons/favicon-48.png" sizes="48x48" type="image/png">\n<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">\n<link rel="icon" href="/icons/favicon-16.png" sizes="16x16" type="image/png">\n<link rel="apple-touch-icon" href="/apple-touch-icon.png">\n<link rel="manifest" href="/site.webmanifest">'),
  'rns': dict(url='https://rns.scotmesh.net/', name='Reticulum in Scotland', title='Reticulum in Scotland — ScotMesh Backbone transport node',
      desc='ScotMesh Backbone: the public Reticulum transport node for Scotland. Connect over TCP (rns.scotmesh.net:4242) or I2P, no account needed; LXMF propagation, Nomad Network, chat hub and the ScotMesh 868 MHz LoRa settings.',
      og_title='Reticulum in Scotland — ScotMesh Backbone', og_desc='The public Reticulum transport node for Scotland. TCP rns.scotmesh.net:4242 or I2P, no registration, no account.',
      image='https://rns.scotmesh.net/og.png', image_alt='ScotMesh Backbone, the public Reticulum transport node for Scotland', theme='#0A1424',
      keywords='Reticulum Scotland, Reticulum transport node, RNS Scotland, LXMF propagation node, Nomad Network Scotland, RNode 868, ScotMesh',
-     about=['Reticulum'], icons='<link rel="icon" href="/favicon.svg" type="image/svg+xml">\n<link rel="apple-touch-icon" href="/apple-touch-icon.png">'),
+     about=['Reticulum'], icons='<link rel="icon" href="/favicon.svg" type="image/svg+xml">\n<link rel="icon" href="/favicon.ico" sizes="32x32">\n<link rel="icon" href="/icons/favicon-48.png" sizes="48x48" type="image/png">\n<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">\n<link rel="icon" href="/icons/favicon-16.png" sizes="16x16" type="image/png">\n<link rel="apple-touch-icon" href="/apple-touch-icon.png">\n<link rel="manifest" href="/site.webmanifest">'),
 }
 
 def jsonld(key):
