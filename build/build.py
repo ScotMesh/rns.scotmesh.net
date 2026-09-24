@@ -215,7 +215,7 @@ HEAD = '''<title>ScotMesh Backbone</title>
 
   /* --------------------------------------------------------------- footer */
   footer { padding-block: 34px 44px; font-size: 14px; color: var(--muted); }
-  .foot-grid { display: grid; grid-template-columns: 1.4fr repeat(2, minmax(0,1fr)); gap: 26px; }
+  .foot-grid { display: grid; grid-template-columns: 1.5fr repeat(3, minmax(0,1fr)); gap: 26px; }
   .foot-grid ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
   .foot-grid a { color: var(--muted); text-decoration: none; }
   .foot-grid a:hover { color: var(--ink); }
@@ -228,7 +228,7 @@ HEAD = '''<title>ScotMesh Backbone</title>
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
   .lockup-scotmesh { display: inline-block; }
-  .lockup-scotmesh svg { display: block; height: 28px; width: auto; }
+  .lockup-scotmesh svg { display: block; height: 26px; width: auto; }
   .lockup-scotmesh .on-light { display: none; }
   @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]) .lockup-scotmesh .on-light { display: block; }
@@ -236,8 +236,9 @@ HEAD = '''<title>ScotMesh Backbone</title>
   }
   :root[data-theme="light"] .lockup-scotmesh .on-light { display: block; }
   :root[data-theme="light"] .lockup-scotmesh .on-dark { display: none; }
-  .foot-bar { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
-    margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13.5px; }
+  .foot-bar { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13.5px; }
+  .foot-bar .mono { font-family: var(--mono); }
 
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -533,23 +534,31 @@ BODY = '''
     <div>
       <span class="lbl">Reticulum</span>
       <ul>
-        <li><a href="https://wiki.scotmesh.net/" target="_blank" rel="noopener">Community wiki</a></li>
         <li><a href="https://reticulum.network/manual/" target="_blank" rel="noopener">Reticulum manual</a></li>
         <li><a href="https://rnode.scotmesh.net/" target="_blank" rel="noopener">ScotMesh Flasher</a></li>
+        <li><a href="https://wiki.scotmesh.net/wiki/Known_bugs_and_workarounds" target="_blank" rel="noopener">Known bugs</a></li>
         <li><a href="/status.json">status.json</a></li>
       </ul>
     </div>
     <div>
-      <span class="lbl">ScotMesh</span>
+      <span class="lbl">Community</span>
       <ul>
-        <li><a href="https://scotmesh.net/" target="_blank" rel="noopener">All networks</a></li>
+        <li><a href="https://scotmesh.uk/" target="_blank" rel="noopener">Main site &amp; forum</a></li>
+        <li><a href="https://wiki.scotmesh.net/" target="_blank" rel="noopener">Community wiki</a></li>
         <li><a href="https://discord.gg/ytxfyuDmSt" target="_blank" rel="noopener">Discord</a></li>
-        <li><a href="https://wiki.scotmesh.net/wiki/Known_bugs_and_workarounds" target="_blank" rel="noopener">Known bugs</a></li>
       </ul>
     </div>
-    <div class="foot-bar" style="grid-column: 1 / -1">
+    <div>
+      <span class="lbl">Networks</span>
+      <ul>
+        <li><a href="https://meshcore.scotmesh.net/" target="_blank" rel="noopener">MeshCore in Scotland</a></li>
+        <li><a href="https://meshtastic.scotmesh.net/" target="_blank" rel="noopener">Meshtastic in Scotland</a></li>
+        <li><a href="https://rns.scotmesh.net/" target="_blank" rel="noopener">Reticulum in Scotland</a></li>
+      </ul>
+    </div>
+    <div class="foot-bar">
       <span>Reticulum in Scotland, part of <a href="https://scotmesh.net/">ScotMesh</a></span>
-      <span class="mono">Peer locations from IP geolocation — indicative only</span>
+      <span class="mono">Peer locations from IP geolocation &mdash; indicative only</span>
     </div>
   </div>
 </footer>
