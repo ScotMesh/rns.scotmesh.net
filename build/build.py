@@ -376,7 +376,7 @@ BODY = '''
 <div class="ann ann-notice" id="site-notice" data-notice="sco-admin-2026-10" role="status">
   <div class="wrap ann-in">
     <span class="ann-ico" aria-hidden="true">&#128225;</span>
-    <span class="ann-txt">Keep Scotland&#8217;s traffic in Scotland: every MeshCore repeater should add <code>sco-admin</code>. <a href="https://meshcore.scotmesh.net/sco-admin/">What to do and see why</a></span>
+    <span class="ann-txt">Keep Scotland&#8217;s traffic in Scotland: every MeshCore repeater should add <code>sco-admin</code>. <a href="https://scotmesh.net/news/keep-scotlands-traffic-in-scotland/">What to do and see why</a></span>
     <button type="button" class="ann-x" aria-label="Dismiss this notice">&#215;</button>
   </div>
 </div>
