@@ -72,6 +72,25 @@ HEAD = '''<title>ScotMesh Backbone</title>
     font-family: var(--sans); font-size: 16px; line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* ---------------- the site notice ----------------
+     One line above the nav. To take it down, delete the block marked
+     ANNOUNCEMENT further down this file. */
+  .ann { border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  .ann-in { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+  .ann-ico { font-size: 16px; line-height: 1; flex: none; }
+  .ann-txt { min-width: 0; flex: 1; }
+  .ann-txt a { color: inherit; text-underline-offset: 3px; }
+  .ann-x { appearance: none; background: none; border: 0; color: inherit; cursor: pointer;
+    font: inherit; font-size: 20px; line-height: 1; padding: 2px 6px; border-radius: 6px;
+    opacity: .72; flex: none; }
+  .ann-x:hover { opacity: 1; background: rgba(127,127,127,.2); }
+  .ann-x:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  .ann-notice { background: var(--saltire); color: #fff; border-bottom-color: var(--saltire); }
+  .ann code { background: rgba(255,255,255,.16); padding: 1px 5px; border-radius: 4px;
+    font-family: var(--mono); font-size: .9em; }
+  @media (max-width: 640px) { .ann-in { align-items: flex-start; } .ann-ico { padding-top: 2px; } }
+
   .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: 20px; }
   h1, h2, h3 { font-family: var(--mono); font-weight: 600; margin: 0; text-wrap: balance; }
   a { color: var(--link); }
@@ -353,6 +372,29 @@ def rows_peers():
 
 
 BODY = '''
+<!-- ANNOUNCEMENT: delete this block to take the notice down -->
+<div class="ann ann-notice" id="site-notice" data-notice="sco-admin-2026-10" role="status">
+  <div class="wrap ann-in">
+    <span class="ann-ico" aria-hidden="true">&#128225;</span>
+    <span class="ann-txt">Keep Scotland&#8217;s traffic in Scotland: every MeshCore repeater should add <code>sco-admin</code>. <a href="https://meshcore.scotmesh.net/sco-admin/">What to do and see why</a></span>
+    <button type="button" class="ann-x" aria-label="Dismiss this notice">&#215;</button>
+  </div>
+</div>
+<script>
+  /* Dismissal is remembered per person and per notice: change data-notice and
+     it comes back for everyone. */
+  (function () {
+    var bar = document.getElementById('site-notice');
+    if (!bar) return;
+    var id = bar.getAttribute('data-notice'), KEY = 'scotmesh-notice-seen';
+    try { if (localStorage.getItem(KEY) === id) bar.hidden = true; } catch (e) { /* private window */ }
+    bar.querySelector('.ann-x').addEventListener('click', function () {
+      try { localStorage.setItem(KEY, id); } catch (e) { /* nothing to remember it with */ }
+      bar.hidden = true;
+    });
+  })();
+</script>
+<!-- /ANNOUNCEMENT -->
 <header class="nav">
   <div class="wrap">
     <a class="lockup" href="#top" aria-label="ScotMesh Reticulum — home">__DARK____LIGHT__</a>
